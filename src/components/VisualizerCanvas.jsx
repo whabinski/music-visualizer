@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import useAudioAnalyzer from "../hooks/useAudioAnalyzer";
 import drawBars from "./modes/BarsVisualizer";
 import drawWaveform from "./modes/WaveformVisualizer";
+import drawRadial from "./modes/RadialVisualizer";
+
 
 export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
   const canvasRef = useRef(null);
@@ -44,9 +46,12 @@ export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
       if (mode === "Waveform") {
         analyser.getByteTimeDomainData(dataArray);
         drawWaveform(ctx, canvas, dataArray);
+      } else if (mode === "Radial") {
+        drawRadial(ctx, canvas, dataArray, smoothed);
       } else {
         drawBars(ctx, canvas, dataArray, smoothed);
       }
+
     };
 
     draw();
@@ -63,7 +68,7 @@ export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
       <canvas
         ref={canvasRef}
         className="w-[80vw] sm:w-[80vw] h-[45vh]
-                  bg-transparent border-2 border-white
+                  bg-transparent
                   shadow-none outline-none rounded-none"
       />
     </div>

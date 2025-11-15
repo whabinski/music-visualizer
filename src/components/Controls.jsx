@@ -12,7 +12,7 @@ export default function Controls({ audioRef, setAudioFile, mode, setMode }) {
     }
   };
 
-  const modes = ["Bars", "Waveform"];
+  const modes = ["Bars", "Waveform", "Radial"];
 
   useEffect(() => {
     if (audioRef.current) {
