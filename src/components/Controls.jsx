@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 
-
-export default function Controls({ audioRef, setAudioFile, mode, setMode }) {
+export default function Controls({ audioRef, setAudioFile, mode, setMode, useMic, setUseMic }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -9,6 +8,7 @@ export default function Controls({ audioRef, setAudioFile, mode, setMode }) {
       setAudioFile(blobURL);
       audioRef.current.src = blobURL;
       audioRef.current.load();
+      setUseMic(false);
     }
   };
 
@@ -43,6 +43,18 @@ export default function Controls({ audioRef, setAudioFile, mode, setMode }) {
         />
       </label>
 
+      {/* Mic Button */}
+      <button
+        onClick={() => {
+          setUseMic((prev) => !prev);
+          if (audioRef.current) audioRef.current.pause();
+        }}
+        className={`px-[1.2vw] py-[0.6vw] rounded-[0.6vw] font-medium transition-all text-[1vw]
+          ${useMic ? "bg-red-500/70 hover:bg-red-500 text-white" : "bg-green-500/60 hover:bg-green-500 text-white"}`}
+      >
+        {useMic ? "Stop Mic" : "Use Mic"}
+      </button>
+
       {/* Audio Player */}
       <audio
         ref={audioRef}
@@ -61,7 +73,9 @@ export default function Controls({ audioRef, setAudioFile, mode, setMode }) {
                    transition-all text-[1vw]"
       >
         {modes.map((m) => (
-          <option key={m} className="text-black bg-white"> {m}</option>
+          <option key={m} className="text-black bg-white">
+            {m}
+          </option>
         ))}
       </select>
     </div>

@@ -4,11 +4,10 @@ import drawBars from "./modes/BarsVisualizer";
 import drawWaveform from "./modes/WaveVisualizer";
 import drawRadial from "./modes/RadialVisualizer";
 
-
-export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
+export default function VisualizerCanvas({ audioRef, audioFile, mode, useMic }) {
   const canvasRef = useRef(null);
   const { analyserRef, dataArrayRef, bufferLengthRef } =
-    useAudioAnalyzer(audioRef, audioFile);
+    useAudioAnalyzer(audioRef, audioFile, useMic);
 
   useEffect(() => {
     if (!analyserRef.current || !canvasRef.current) return;
@@ -19,15 +18,11 @@ export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
 
     const resizeCanvas = () => {
       const dpr = window.devicePixelRatio || 1;
-
-      // Use the true rendered width/height
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
@@ -51,7 +46,6 @@ export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
       } else {
         drawBars(ctx, canvas, dataArray, smoothed);
       }
-
     };
 
     draw();
@@ -61,7 +55,7 @@ export default function VisualizerCanvas({ audioRef, audioFile, mode }) {
       window.removeEventListener("resize", resizeCanvas);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [audioFile, mode]);
+  }, [audioFile, mode, useMic]);
 
   return (
     <div className="w-screen flex justify-center">
